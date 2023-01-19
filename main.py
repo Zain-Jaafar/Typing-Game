@@ -4,7 +4,7 @@ pygame.init()
 from settings import *
 from textbox import Textbox
 
-textbox = Textbox(FONT, SCREEN, "lightskyblue3")
+textbox = Textbox(FONT, SCREEN, "lightskyblue", (100, 600))
 
 while True:
     
@@ -16,8 +16,12 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 textbox.text = textbox.text[0:-1]
+            elif event.key == pygame.K_RETURN:
+                print(textbox.text)
+                textbox.text = ""
             else:
-                textbox.text += event.unicode
+                if len(textbox.text) <= 10:
+                    textbox.text += event.unicode
     
     SCREEN.fill((0, 0 ,0))
     
