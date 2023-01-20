@@ -15,3 +15,10 @@ FONT = pygame.font.Font('Fonts/Pixeltype.ttf', 32)
 
 with open('data.json') as file:
     data = json.load(file)
+
+word_group = pygame.sprite.Group()
+word_list = []
+spawn_counter = 0
+
+spawn_word = pygame.USEREVENT
+pygame.time.set_timer(spawn_word, 2000)

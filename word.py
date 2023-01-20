@@ -3,8 +3,8 @@ from pygame import sprite, Surface, Rect
 class Word(sprite.Sprite):
     def __init__(self, font, colour, word, position, scale):
         super().__init__()
-        self.font = font
-        self.text_surf = self.font.render(word, 1, colour)
+        self.word = word
+        self.text_surf = font.render(self.word, 1, colour)
         self.image = Surface(scale).convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = Rect(position, scale)
