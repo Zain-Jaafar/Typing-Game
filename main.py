@@ -39,6 +39,14 @@ def main():
                 word_list.append(word_group.sprites()[spawn_counter].word)
                 spawn_counter += 1
         
+        try:
+            if word_group.sprites()[0].rect.x <= 0:
+                word_group.sprites()[0].kill()
+                del word_list[0]
+                spawn_counter -= 1
+        except:
+            pass
+        
         SCREEN.fill((40, 40 ,40))
         
         textbox.render()
