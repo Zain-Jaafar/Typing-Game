@@ -5,11 +5,16 @@ pygame.init()
 from settings import *
 from textbox import Textbox
 from word import Word
+from debug import Debug
 
 textbox = Textbox(FONT, SCREEN, (40, 40, 40), (SCREEN_WIDTH/2, 650), (240, 32))
 
 bottom_section = pygame.Surface((1200, 100))
 bottom_section.fill((25, 25, 25))
+
+score_counter = Debug(FONT, "Score", 0, "green", (20, 20), (240, 32))
+debug_group = pygame.sprite.Group()
+debug_group.add(score_counter)
 
 def main():
     global spawn_counter
@@ -31,6 +36,7 @@ def main():
                         word_group.sprites()[deleted_word_index].kill()
                         spawn_counter -= 1
                         textbox.text = ''
+                        score_counter.value += 100
                 else:
                     if len(textbox.text) < 20:
                         textbox.text += event.unicode
@@ -38,7 +44,7 @@ def main():
                         print(textbox.image.get_width())
             
             if event.type == spawn_word:
-                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)), (136, 32))
+                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)), (150, 32))
                 word_group.add(word)
                 word_list.append(word_group.sprites()[spawn_counter].word)
                 spawn_counter += 1
@@ -58,6 +64,9 @@ def main():
         
         word_group.draw(SCREEN)
         word_group.update()
+        
+        debug_group.update()
+        debug_group.draw(SCREEN)
         
         pygame.display.flip()
         clock.tick(FPS)
