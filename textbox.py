@@ -8,9 +8,10 @@ class Textbox():
         self.display = display_surface
         
         self.rect = Rect(position, scale)
+        self.rect.center = position
     
     def render(self):
-        self.image = self.font.render(self.text, False, 'black')
+        self.image = self.font.render(self.text, False, 'green')
         draw.rect(self.display, self.colour, self.rect)
         self.display.blit(self.image, (self.rect.x + 5, self.rect.y + 10))
         

@@ -6,8 +6,10 @@ from settings import *
 from textbox import Textbox
 from word import Word
 
-textbox = Textbox(FONT, SCREEN, 'lightskyblue', (100, 600), (136, 32))
+textbox = Textbox(FONT, SCREEN, (40, 40, 40), (SCREEN_WIDTH/2, 650), (240, 32))
 
+bottom_section = pygame.Surface((1200, 100))
+bottom_section.fill((25, 25, 25))
 
 def main():
     global spawn_counter
@@ -30,11 +32,13 @@ def main():
                         spawn_counter -= 1
                         textbox.text = ''
                 else:
-                    if len(textbox.text) < 10:
+                    if len(textbox.text) < 20:
                         textbox.text += event.unicode
+                    else:
+                        print(textbox.image.get_width())
             
             if event.type == spawn_word:
-                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 650)), (136, 32))
+                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)), (136, 32))
                 word_group.add(word)
                 word_list.append(word_group.sprites()[spawn_counter].word)
                 spawn_counter += 1
@@ -48,6 +52,7 @@ def main():
             pass
         
         SCREEN.fill((40, 40 ,40))
+        SCREEN.blit(bottom_section, (0, 600))
         
         textbox.render()
         
