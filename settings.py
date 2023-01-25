@@ -22,3 +22,10 @@ spawn_counter = 0
 
 spawn_word = pygame.USEREVENT
 pygame.time.set_timer(spawn_word, 2000)
+
+game_states = {
+    "Main Menu": False,
+    "Gameplay": False,
+    "Options": False,
+    "Leaderboard": False
+}

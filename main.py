@@ -5,19 +5,20 @@ pygame.init()
 from settings import *
 from textbox import Textbox
 from word import Word
-from debug import Debug
+from counter import Counter
 
 textbox = Textbox(FONT, SCREEN, (40, 40, 40), (SCREEN_WIDTH/2, 650), (240, 32))
 
 bottom_section = pygame.Surface((1200, 100))
 bottom_section.fill((25, 25, 25))
 
-score_counter = Debug(FONT, "Score", 0, "green", (20, 20), (240, 32))
-debug_group = pygame.sprite.Group()
-debug_group.add(score_counter)
+score_counter = Counter(FONT, "Score", 0, "green", (20, 20), (240, 32))
+counter_group = pygame.sprite.Group()
+counter_group.add(score_counter)
 
 def main():
     global spawn_counter
+    game_states["Main Menu"] = True
     
     while True:
         
@@ -65,8 +66,8 @@ def main():
         word_group.draw(SCREEN)
         word_group.update()
         
-        debug_group.update()
-        debug_group.draw(SCREEN)
+        counter_group.update()
+        counter_group.draw(SCREEN)
         
         pygame.display.flip()
         clock.tick(FPS)
