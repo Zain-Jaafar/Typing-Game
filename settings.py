@@ -27,5 +27,12 @@ game_states = {
     "Main Menu": False,
     "Gameplay": False,
     "Options": False,
-    "Leaderboard": False
+    "Leaderboard": False,
+    "Game Lose": False
 }
+
+def draw_text(font, colour, text, position):
+    text_surf = font.render(text, False, colour)
+    text_rect = pygame.Rect((0, 0), (text_surf.get_size()))
+    text_rect.center = position
+    SCREEN.blit(text_surf, text_rect)
