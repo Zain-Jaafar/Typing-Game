@@ -22,8 +22,12 @@ def main():
     game_states["Gameplay"] = True
     
     while True:
+        
         if game_states["Main Menu"]:
             SCREEN.fill((40, 40 ,40))
+            SCREEN.blit(bottom_section, (0, 600))
+        
+            textbox.render()
         
         if game_states["Gameplay"]:
             for event in pygame.event.get():
@@ -40,8 +44,8 @@ def main():
                             word_list.remove(textbox.text)
                             word_group.sprites()[deleted_word_index].kill()
                             spawn_counter -= 1
+                            score_counter.value += len(textbox.text) * 10
                             textbox.text = ''
-                            score_counter.value += 100
                     else:
                         if len(textbox.text) < 20:
                             textbox.text += event.unicode
@@ -61,13 +65,14 @@ def main():
                     spawn_counter -= 1
                     health_counter.value -= 1
                     if health_counter.value == 0:
+                        word_group.empty()
+                        word_list.clear()
+                        spawn_counter = 0
                         game_states["Game Lose"] = True
-                        
-
             
             SCREEN.fill((40, 40 ,40))
             SCREEN.blit(bottom_section, (0, 600))
-            
+        
             textbox.render()
             
             word_group.draw(SCREEN)
@@ -77,9 +82,21 @@ def main():
             counter_group.draw(SCREEN)
         
         if game_states["Game Lose"]:
-            SCREEN.fill((40, 40 ,40))
+            word_group.empty()
+            word_list.clear()
+            spawn_counter = 0
             
-            draw_text(FONT, "green", "You Lose!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+            # SCREEN.fill((40, 40 ,40))
+            SCREEN.blit(bottom_section, (0, 600))
+        
+            textbox.render()
+            
+            draw_text(FONT, "green", "You Lose!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30), 64)
+            draw_text(FONT, "green", f"Score: {score_counter.value}", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 30), 64)
+            
+            draw_text(FONT, "green", "Type \"restart\" to play again!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 100))
+            
+            
         
         pygame.display.flip()
         clock.tick(FPS)
