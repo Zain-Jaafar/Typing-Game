@@ -22,15 +22,31 @@ def main():
     game_states["Gameplay"] = True
     
     while True:
+
+        SCREEN.fill((40, 40, 40))
+        SCREEN.blit(bottom_section, (0, 600))
+        
+        textbox.render()
         
         if game_states["Main Menu"]:
-            SCREEN.fill((40, 40 ,40))
-            SCREEN.blit(bottom_section, (0, 600))
-        
-            textbox.render()
+            pass
         
         if game_states["Gameplay"]:
-            for event in pygame.event.get():
+            word_group.draw(SCREEN)
+            word_group.update()
+            
+            counter_group.update()
+            counter_group.draw(SCREEN)
+        
+        if game_states["Game Lose"]:
+            draw_text(FONT, "green", "You Lose!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30), 64)
+            draw_text(FONT, "green", f"Score: {score_counter.value}", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 30), 64)
+            
+            draw_text(FONT, "green", "Type \"restart\" to play again!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 100))
+        
+         
+        for event in pygame.event.get():
+            if game_states["Gameplay"]:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -58,45 +74,40 @@ def main():
                     word_list.append(word_group.sprites()[spawn_counter].word)
                     spawn_counter += 1
             
-            if spawn_counter > 0:
-                if word_group.sprites()[0].rect.x <= 0:
-                    word_group.sprites()[0].kill()
-                    del word_list[0]
-                    spawn_counter -= 1
-                    health_counter.value -= 1
-                    if health_counter.value == 0:
-                        word_group.empty()
-                        word_list.clear()
-                        spawn_counter = 0
-                        game_states["Game Lose"] = True
-            
-            SCREEN.fill((40, 40 ,40))
-            SCREEN.blit(bottom_section, (0, 600))
-        
-            textbox.render()
-            
-            word_group.draw(SCREEN)
-            word_group.update()
-            
-            counter_group.update()
-            counter_group.draw(SCREEN)
-        
-        if game_states["Game Lose"]:
-            word_group.empty()
-            word_list.clear()
-            spawn_counter = 0
-            
-            # SCREEN.fill((40, 40 ,40))
-            SCREEN.blit(bottom_section, (0, 600))
-        
-            textbox.render()
-            
-            draw_text(FONT, "green", "You Lose!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30), 64)
-            draw_text(FONT, "green", f"Score: {score_counter.value}", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 30), 64)
-            
-            draw_text(FONT, "green", "Type \"restart\" to play again!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 100))
+                if spawn_counter > 0:
+                    if word_group.sprites()[0].rect.x <= 0:
+                        word_group.sprites()[0].kill()
+                        del word_list[0]
+                        spawn_counter -= 1
+                        health_counter.value -= 1
+                        if health_counter.value == 0:
+                            word_group.empty()
+                            word_list.clear()
+                            spawn_counter = 0
+                            game_states["Gameplay"] = False
+                            game_states["Game Lose"] = True
             
             
+            if game_states["Game Lose"]:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        textbox.text = textbox.text[0:-1]
+                    elif event.key == pygame.K_RETURN:
+                        if textbox.text == "restart":
+                            score_counter.value = 0
+                            health_counter.value = 3
+                            textbox.text = ''
+                            game_states["Gameplay"] = True
+                            game_states["Game Lose"] = False
+                    else:
+                        if len(textbox.text) < 20:
+                            textbox.text += event.unicode
+                        else:
+                            print(textbox.image.get_width())
         
         pygame.display.flip()
         clock.tick(FPS)
