@@ -19,7 +19,7 @@ counter_group.add(score_counter, health_counter)
 
 def main():
     global spawn_counter
-    game_states["Gameplay"] = True
+    game_states["Main Menu"] = True
     
     while True:
 
@@ -29,7 +29,14 @@ def main():
         textbox.render()
         
         if game_states["Main Menu"]:
-            pass
+            word_group.empty()
+            word_list.clear()
+            spawn_counter = 0
+            draw_text(FONT, "green", "Typing Game", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200), 72)
+            draw_text(FONT, "green", "Type \"start\" to play!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 100), 48)
+            draw_text(FONT, "green", "Type \"options\" to access the options menu!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 50), 48)
+            draw_text(FONT, "green", "Type \"leaderboard\" to view the leader board!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 48)
+            
         
         if game_states["Gameplay"]:
             word_group.draw(SCREEN)
@@ -39,6 +46,9 @@ def main():
             counter_group.draw(SCREEN)
         
         if game_states["Game Lose"]:
+            word_group.empty()
+            word_list.clear()
+            spawn_counter = 0
             draw_text(FONT, "green", "You Lose!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30), 64)
             draw_text(FONT, "green", f"Score: {score_counter.value}", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 30), 64)
             
@@ -46,15 +56,15 @@ def main():
         
          
         for event in pygame.event.get():
-            if game_states["Gameplay"]:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        textbox.text = textbox.text[0:-1]
-                    elif event.key == pygame.K_RETURN:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    textbox.text = textbox.text[0:-1]
+                elif event.key == pygame.K_RETURN:
+                    if game_states["Gameplay"]:
                         if textbox.text in word_list:
                             deleted_word_index = word_list.index(textbox.text)
                             word_list.remove(textbox.text)
@@ -62,52 +72,45 @@ def main():
                             spawn_counter -= 1
                             score_counter.value += len(textbox.text) * 10
                             textbox.text = ''
-                    else:
-                        if len(textbox.text) < 20:
-                            textbox.text += event.unicode
-                        else:
-                            print(textbox.image.get_width())
-                
-                if event.type == spawn_word:
-                    word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)))
-                    word_group.add(word)
-                    word_list.append(word_group.sprites()[spawn_counter].word)
-                    spawn_counter += 1
-            
-                if spawn_counter > 0:
-                    if word_group.sprites()[0].rect.x <= 0:
-                        word_group.sprites()[0].kill()
-                        del word_list[0]
-                        spawn_counter -= 1
-                        health_counter.value -= 1
-                        if health_counter.value == 0:
-                            word_group.empty()
-                            word_list.clear()
-                            spawn_counter = 0
-                            game_states["Gameplay"] = False
-                            game_states["Game Lose"] = True
-            
-            
-            if game_states["Game Lose"]:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        textbox.text = textbox.text[0:-1]
-                    elif event.key == pygame.K_RETURN:
+                    
+                    elif game_states["Main Menu"]:
+                        if textbox.text == "start":
+                            game_states["Main Menu"] = False
+                            game_states["Gameplay"] = True
+                            textbox.text = ''
+                    
+                    elif game_states["Game Lose"]:
                         if textbox.text == "restart":
                             score_counter.value = 0
                             health_counter.value = 3
                             textbox.text = ''
                             game_states["Gameplay"] = True
                             game_states["Game Lose"] = False
+                    
+                else:
+                    if len(textbox.text) < 20:
+                        textbox.text += event.unicode
                     else:
-                        if len(textbox.text) < 20:
-                            textbox.text += event.unicode
-                        else:
-                            print(textbox.image.get_width())
+                        print(textbox.image.get_width())
+            
+            if event.type == spawn_word:
+                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)))
+                word_group.add(word)
+                word_list.append(word_group.sprites()[spawn_counter].word)
+                spawn_counter += 1
+        
+            if spawn_counter > 0:
+                if word_group.sprites()[0].rect.x <= 0:
+                    word_group.sprites()[0].kill()
+                    del word_list[0]
+                    spawn_counter -= 1
+                    health_counter.value -= 1
+                    if health_counter.value == 0:
+                        word_group.empty()
+                        word_list.clear()
+                        spawn_counter = 0
+                        game_states["Gameplay"] = False
+                        game_states["Game Lose"] = True
         
         pygame.display.flip()
         clock.tick(FPS)
