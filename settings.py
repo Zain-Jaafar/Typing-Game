@@ -18,10 +18,14 @@ with open('data.json') as file:
 
 word_group = pygame.sprite.Group()
 word_list = []
+word_speed = 1
 spawn_counter = 0
 
 spawn_word = pygame.USEREVENT
 pygame.time.set_timer(spawn_word, 2000)
+
+speed_up = pygame.USEREVENT + 1
+pygame.time.set_timer(speed_up, 20000)
 
 game_states = {
     "Main Menu": False,
@@ -30,6 +34,8 @@ game_states = {
     "Leaderboard": False,
     "Game Lose": False
 }
+
+score_multiplier = 1
 
 def draw_text(font, colour, text, position, text_size=32):
     font = pygame.font.Font('Fonts/Pixeltype.ttf', text_size)

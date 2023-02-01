@@ -18,7 +18,7 @@ counter_group = pygame.sprite.Group()
 counter_group.add(score_counter, health_counter)
 
 def main():
-    global spawn_counter
+    global spawn_counter, word_speed, score_multiplier
     game_states["Main Menu"] = True
     
     while True:
@@ -70,7 +70,7 @@ def main():
                             word_list.remove(textbox.text)
                             word_group.sprites()[deleted_word_index].kill()
                             spawn_counter -= 1
-                            score_counter.value += len(textbox.text) * 10
+                            score_counter.value += len(textbox.text) * 10 * score_multiplier
                             textbox.text = ''
                     
                     elif game_states["Main Menu"]:
@@ -83,6 +83,7 @@ def main():
                         if textbox.text == "restart":
                             score_counter.value = 0
                             health_counter.value = 3
+                            word_speed = 1
                             textbox.text = ''
                             game_states["Gameplay"] = True
                             game_states["Game Lose"] = False
@@ -94,23 +95,28 @@ def main():
                         print(textbox.image.get_width())
             
             if event.type == spawn_word:
-                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)))
+                word = Word(FONT, "green", data["word_list"][randint(0, 999)], (1200, randint(50, 550)), word_speed)
                 word_group.add(word)
                 word_list.append(word_group.sprites()[spawn_counter].word)
                 spawn_counter += 1
         
-            if spawn_counter > 0:
-                if word_group.sprites()[0].rect.x <= 0:
-                    word_group.sprites()[0].kill()
-                    del word_list[0]
-                    spawn_counter -= 1
-                    health_counter.value -= 1
-                    if health_counter.value == 0:
-                        word_group.empty()
-                        word_list.clear()
-                        spawn_counter = 0
-                        game_states["Gameplay"] = False
-                        game_states["Game Lose"] = True
+            if game_states["Gameplay"]:
+                if event.type == speed_up:
+                    word_speed += 0.5
+                    score_multiplier += 1
+        
+        if spawn_counter > 0:
+            if word_group.sprites()[0].rect.x <= 0:
+                word_group.sprites()[0].kill()
+                del word_list[0]
+                spawn_counter -= 1
+                health_counter.value -= 1
+                if health_counter.value == 0:
+                    word_group.empty()
+                    word_list.clear()
+                    spawn_counter = 0
+                    game_states["Gameplay"] = False
+                    game_states["Game Lose"] = True
         
         pygame.display.flip()
         clock.tick(FPS)
