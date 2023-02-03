@@ -31,11 +31,13 @@ game_states = {
     "Main Menu": False,
     "Gameplay": False,
     "Options": False,
-    "Leaderboard": False,
+    "Highscore": False,
     "Game Lose": False
 }
 
 score_multiplier = 1
+
+new_highscore = False
 
 def draw_text(font, colour, text, position, text_size=32):
     font = pygame.font.Font('Fonts/Pixeltype.ttf', text_size)
