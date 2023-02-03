@@ -34,7 +34,6 @@ def main():
             spawn_counter = 0
             draw_text(FONT, "green", "Typing Game", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200), 72)
             draw_text(FONT, "green", "Type \"start\" to play!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 100), 48)
-            draw_text(FONT, "green", "Type \"options\" to access the options menu!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 50), 48)
             draw_text(FONT, "green", "Type \"leaderboard\" to view the leader board!", (SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 48)
             
         
